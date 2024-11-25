@@ -13,7 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
-  sensor_msgs
+  camera_info_manager
 )
 
 ## System dependencies are found with CMake's conventions
@@ -212,3 +212,5 @@ include_directories(
 
 add_executable(opencv_pub src/opencv.cpp)  
 target_link_libraries(opencv_pub ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})  
+add_executable(camera_pub src/opencv2.cpp)  
+target_link_libraries(camera_pub ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})  

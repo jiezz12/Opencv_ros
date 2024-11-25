@@ -16,11 +16,10 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "opencv_ros");  
     ros::NodeHandle nh;  
     image_transport::ImageTransport it(nh);  
-    image_transport::Publisher pub = it.advertise("camera/image", 10);  
+    image_transport::Publisher pub = it.advertise("/camera/image", 10);  
  
     nh.getParam("image_view", image_view);
     nh.getParam("video_device", video_device);
-
 
     VideoCapture cap(video_device);  //dev/video0
     if(!cap.isOpened())   
@@ -33,16 +32,17 @@ int main(int argc, char** argv)
     namedWindow("video");
 
     ros::Rate loop_rate(5);  
-    while (nh.ok()) 
+    while (ros::ok()) 
     {  
         cap >> frame;  //摄像头画面赋给frame
         if(!frame.empty()) //画面是否正常
         {  
             /*对图片二次处理*/
 
-
-            //opencv转ros
-            try{
+	        circle(frame, Point(50, 50), 45, Scalar(255, 0, 0), -1, 8, 0);        
+             //opencv转ros
+            try
+            {
                 msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame).toImageMsg();  
             }
             catch (cv_bridge::Exception& e)
@@ -52,7 +52,10 @@ int main(int argc, char** argv)
             if(image_view)
             {
                 imshow("video",frame);//显示图像窗口
-                waitKey(1);//1ms延时
+                int c = waitKey(1);
+		            if (c == 27) {//key:esc
+			        ros::shutdown();
+		        }
             }
             pub.publish(msg);  
     	}  
