@@ -14,7 +14,7 @@ int video_device;
 int main(int argc, char** argv)  
 {  
     ros::init(argc, argv, "opencv_ros");  
-    ros::NodeHandle nh;  
+    ros::NodeHandle nh("~");  
     image_transport::ImageTransport it(nh);  
     image_transport::Publisher pub = it.advertise("/camera/image", 10);  
  
